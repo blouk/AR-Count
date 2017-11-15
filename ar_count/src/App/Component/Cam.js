@@ -1,0 +1,86 @@
+import React, {
+    Component
+} from 'react';
+
+class Cam extends Component {
+
+
+    constructor(args) {
+        super(args);
+        this.markers = 0;
+        this.state = {'markers':0};
+        this.success = this.success.bind(this);
+    }
+
+    componentDidMount() {
+        this.markers = 0;
+
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        var tw = 1280 / 2;
+        var th = 720 / 2;
+
+        var hdConstraints = {
+            audio: false,
+            video: {
+                mandatory: {
+                    maxWidth: tw,
+                    maxHeight: th
+                }
+            }
+        };
+
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia(hdConstraints, this.success, this.errorCallback,this)
+        } else {
+            this.errorCallback('');
+        }
+    }
+
+    success(stream) {
+
+        var self  = this;
+        var video_element = document.getElementById('video');
+        video_element.src = window.URL.createObjectURL(stream);
+        var cameraParam = new window.ARCameraParam();
+
+        cameraParam.onload = function() {
+            var arController;
+
+            var interval = setInterval(function() {
+
+                if (!arController) {
+                    arController = new window.ARController(video_element, cameraParam);
+
+                arController.debugSetup();
+
+                }
+                arController.process();
+                self.setState( {'markers' : arController.getMarkerNum()});
+            }, 16);
+
+
+
+        };
+        cameraParam.src = '/data/camera_para.dat';
+    }
+
+    errorCallback(e) {
+        console.log("Can't access user media", e);
+    }
+
+    get_markers(){
+        return this.markers;
+    }
+
+    render() {
+        return ( <
+            div className = "ar-cam" >
+            <video id = "video" / >
+            <div className = "ar-count-display" ># {this.state.markers} < /div>
+            </div>
+        );
+    }
+}
+
+
+export default Cam;
