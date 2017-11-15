@@ -8,18 +8,18 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 git clone https://github.com/blouk/AR-Count.git
 cd ar_count
 ````
-##Install dependencies
+## Install dependencies
 ````bash
  npm install
 ````
 You need npm installed : https://docs.npmjs.com/getting-started/installing-node
 
-##Dev build
+## Dev build
 ````bash
  npm start
 ````
 
-##build
+## Build
 ````bash
  npm run build
 ````
