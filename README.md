@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app) and [jsartoolkit5](https://github.com/artoolkit/jsartoolkit5)
 
 
 # Count number of markers
