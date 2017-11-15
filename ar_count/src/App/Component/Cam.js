@@ -4,7 +4,6 @@ import React, {
 
 class Cam extends Component {
 
-
     constructor(args) {
         super(args);
         this.markers = 0;
@@ -45,10 +44,9 @@ class Cam extends Component {
         var cameraParam = new window.ARCameraParam();
 
         cameraParam.onload = function() {
-
-
             var interval = setInterval(function() {
                 if (!video_element.videoWidth)	return;
+
                 if (!arController) {
                     arController = new window.ARController(video_element, cameraParam);
                     arController.setPatternDetectionMode(window.artoolkit.AR_TEMPLATE_MATCHING_MONO_AND_MATRIX);
@@ -56,7 +54,6 @@ class Cam extends Component {
                 }
 
                 arController.process();
-
                 self.setState( {'markers' : arController.getMarkerNum()} );
 
             }, 16);
@@ -70,15 +67,11 @@ class Cam extends Component {
         console.log("Can't access user media", e);
     }
 
-    get_markers(){
-        return this.markers;
-    }
-
     render() {
-        return ( <
-            div className="ar-cam">
+        return (
+            <div className="ar-cam">
             <video id="video"/>
-            <div className = "ar-count-display" ># {this.state.markers} < /div>
+            <div className="ar-count-display"># {this.state.markers}</div>
             </div>
         );
     }
