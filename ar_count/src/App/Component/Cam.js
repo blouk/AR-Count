@@ -13,11 +13,10 @@ class Cam extends Component {
     }
 
     componentDidMount() {
-        this.markers = 0;
 
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-        var tw = 1280 / 2;
-        var th = 720 / 2;
+        var tw = 720 / 2;
+        var th = 480 / 2;
 
         var hdConstraints = {
             audio: false,
@@ -30,7 +29,7 @@ class Cam extends Component {
         };
 
         if (navigator.getUserMedia) {
-            navigator.getUserMedia(hdConstraints, this.success, this.errorCallback,this)
+            navigator.getUserMedia(hdConstraints, this.success, this.errorCallback,this);
         } else {
             this.errorCallback('');
         }
@@ -39,25 +38,28 @@ class Cam extends Component {
     success(stream) {
 
         var self  = this;
-        var video_element = document.getElementById('video');
+        var arController;
+        var  video_element= document.getElementById('video');
         video_element.src = window.URL.createObjectURL(stream);
+        video_element.play();
         var cameraParam = new window.ARCameraParam();
 
         cameraParam.onload = function() {
-            var arController;
+
 
             var interval = setInterval(function() {
-
+                if (!video_element.videoWidth)	return;
                 if (!arController) {
                     arController = new window.ARController(video_element, cameraParam);
-
-                arController.debugSetup();
-
+                    arController.setPatternDetectionMode(window.artoolkit.AR_TEMPLATE_MATCHING_MONO_AND_MATRIX);
+                    arController.debugSetup();
                 }
-                arController.process();
-                self.setState( {'markers' : arController.getMarkerNum()});
-            }, 16);
 
+                arController.process();
+
+                self.setState( {'markers' : arController.getMarkerNum()} );
+
+            }, 16);
 
 
         };
@@ -74,8 +76,8 @@ class Cam extends Component {
 
     render() {
         return ( <
-            div className = "ar-cam" >
-            <video id = "video" / >
+            div className="ar-cam">
+            <video id="video"/>
             <div className = "ar-count-display" ># {this.state.markers} < /div>
             </div>
         );
