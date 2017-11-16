@@ -12,8 +12,7 @@
         "grunt-contrib-copy": "^1.0.0",
         "grunt": "",
         "grunt-contrib-watch": "",
-        "grunt-sass": "",
-        "bootstrap-sass": ""
+        "grunt-sass": ""
     },
     "scripts": {
         "start": "react-scripts start",
