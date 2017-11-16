@@ -14,8 +14,8 @@ class Cam extends Component {
     componentDidMount() {
 
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-        var tw = 720 / 2;
-        var th = 480 / 2;
+        var tw = 1280 / 2;
+        var th = 720 / 2;
 
         var hdConstraints = {
             audio: false,
