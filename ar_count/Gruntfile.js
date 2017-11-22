@@ -19,6 +19,7 @@ module.exports = function(grunt) {
         },
         sass: {
             options: {
+                includePaths: ['node_modules/bootstrap-sass/assets/stylesheets/'],
                 sourceMap: true,
                 outputStyle: 'compressed'
             },

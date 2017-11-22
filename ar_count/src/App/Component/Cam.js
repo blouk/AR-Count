@@ -6,9 +6,10 @@ class Cam extends Component {
 
     constructor(args) {
         super(args);
-        this.markers = 0;
         this.state = {
-            'markers': 0
+            marker1: 0,
+            marker2:0,
+            marker3:0
         };
         this.success = this.success.bind(this);
     }
@@ -52,37 +53,37 @@ class Cam extends Component {
                 if (!arController) {
                     arController = new window.ARController(video_element, cameraParam);
                     arController.setPatternDetectionMode(window.artoolkit.AR_TEMPLATE_MATCHING_MONO_AND_MATRIX);
-
-                    arController.debugSetup();
-                    arController.loadMarker('/data/patt.hiro', function(marker) {
-                        //console.log('loaded marker', marker);
-
+                    //arController.debugSetup();
+                    arController.loadMarker('/data/1.pat', function(marker) {
+                        console.log('loaded marker', marker);
                         marker1 = marker;
 
                     });
 
-                    // arController.loadMarker('/data/pattern-marker2.patt', function(marker) {
-                    //     console.log('loaded marker', marker);
-                    //     marker2 = marker;
-                    //
-                    // });
-                    //
-                    //
-                    // arController.loadMarker('/data/pattern-marker3.patt', function(marker) {
-                    //     console.log('loaded marker', marker);
-                    //     marker3 = marker;
-                    //
-                    // });
+                    arController.loadMarker('/data/2.pat', function(marker) {
+                        console.log('loaded marker', marker);
+                        marker2 = marker;
 
-                    arController.addEventListener('markerNum', function (markerNum) {
-                        console.log('got markers', markerNum);
                     });
 
+
+                    arController.loadMarker('/data/3.pat', function(marker) {
+                        console.log('loaded marker', marker);
+                        marker3 = marker;
+
+                    });
+
+
                     arController.addEventListener('getMarker', function(ev){
-                    //    console.log(ev.data.marker.idPatt);
                         if(ev.data.marker.idPatt === marker1){
                             console.log('saw marker', ev.data.marker.idPatt);
-        			        // console.log('transformation matrix', arController.getTransformationMatrix());
+                        }
+                        if(ev.data.marker.idPatt === marker2){
+                            console.log('saw marker', ev.data.marker.idPatt);
+                        }
+
+                        if(ev.data.marker.idPatt === marker3){
+                            console.log('saw marker', ev.data.marker.idPatt);
                         }
                     });
 
@@ -90,20 +91,6 @@ class Cam extends Component {
                 arController.process();
 
             },16);
-            console.log(arController)
-            // arController.loadMarker('/data/pattern-marker1.patt', function(marker) {
-            //     console.log('loaded marker', marker);
-            //     markerID = marker;
-            //
-            // });
-
-            // arController.addEventListener('getMarker', function(ev){
-            //     if(ev.marker.idPatt === markerID){
-            //         console.log('saw marker', ev.data.marker);
-			//         console.log('transformation matrix', arController.getTransformationMatrix());
-            //     }
-            // });
-
 
         };
 
@@ -118,7 +105,22 @@ class Cam extends Component {
         return (
             <div className="ar-cam">
                 <video id="video" width="640" />
-                <div className = "ar-count-display" >#{this.state.markers}</div>
+                <div className = "ar-count-display" >
+                    <div className="container">
+                        <div className="col-md-4">
+                        <img src={process.env.PUBLIC_URL + '/img/1-M.png'} alt="M1" className="img img-responsive"/>
+                            #{this.state.marker1}
+                        </div>
+                        <div className="col-md-4">
+                            <img src={process.env.PUBLIC_URL + '/img/2-M.png'} alt="M2" className="img img-responsive"/>
+                            #{this.state.marker2}
+                        </div>
+                        <div className="col-md-4">
+                            <img src={process.env.PUBLIC_URL + '/img/3-M.png'} alt="M3" className="img img-responsive"/>
+                            #{this.state.marker3}
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
