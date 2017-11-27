@@ -40,61 +40,102 @@ class Cam extends Component {
     success(stream) {
 
         var arController;
+        var self = this;
         var video_element = document.getElementById('video');
         video_element.src = window.URL.createObjectURL(stream);
         video_element.play();
         var cameraParam = new window.ARCameraParam();
         var marker1,marker2,marker3;
+        var markers_array = [];
 
         cameraParam.onload = function() {
 
             var interval = setInterval(function(){
                 if(!video_element.videoWidth) return;
+
                 if (!arController) {
                     arController = new window.ARController(video_element, cameraParam);
-                    arController.setPatternDetectionMode(window.artoolkit.AR_TEMPLATE_MATCHING_MONO_AND_MATRIX);
+                    arController.setPatternDetectionMode(window.artoolkit.AR_TEMPLATE_MATCHING_COLOR_AND_MATRIX);
                     //arController.debugSetup();
+
+
                     arController.loadMarker('/data/1.pat', function(marker) {
                         console.log('loaded marker', marker);
                         marker1 = marker;
-
                     });
 
                     arController.loadMarker('/data/2.pat', function(marker) {
                         console.log('loaded marker', marker);
                         marker2 = marker;
-
                     });
 
 
                     arController.loadMarker('/data/3.pat', function(marker) {
                         console.log('loaded marker', marker);
                         marker3 = marker;
-
                     });
 
+                    var num_marker1 = 0;
+                    var num_marker2 = 0;
+                    var num_marker3 = 0;
 
                     arController.addEventListener('getMarker', function(ev){
-                        if(ev.data.marker.idPatt === marker1){
-                            console.log('saw marker', ev.data.marker.idPatt);
-                        }
-                        if(ev.data.marker.idPatt === marker2){
-                            console.log('saw marker', ev.data.marker.idPatt);
-                        }
 
-                        if(ev.data.marker.idPatt === marker3){
-                            console.log('saw marker', ev.data.marker.idPatt);
-                        }
+                        var marker_num = this.getMarkerNum();
+
+                        num_marker1 = 0;
+                        num_marker2 = 0;
+                        num_marker3 = 0;
+
+                		for (var i=0; i<marker_num; i++) {
+                            var marker = this.getMarker(i);
+                            switch(marker.idPatt){
+                                case marker1:
+                                    num_marker1 ++;
+                                    break;
+                                case marker2:
+                                    num_marker2++;
+                                    break;
+                                case marker3:
+                                    num_marker3++;
+                                    break;
+                            }
+                		}
+
+                        self.setState({
+                            marker1:num_marker1,
+                            marker2:num_marker2,
+                            marker3:num_marker3
+                        });
                     });
 
                 }
+
                 arController.process();
 
-            },16);
+                if(arController.getMarkerNum() < 1 ) {
+                     num_marker1 = 0;
+                     num_marker2 = 0;
+                     num_marker3 = 0;
+
+                     self.setState({
+                         marker1:num_marker1,
+                         marker2:num_marker2,
+                         marker3:num_marker3
+                     });
+                }
+                //console.log(arController.getMarkerNum())
+
+            },200);
 
         };
 
         cameraParam.src = '/data/camera_para.dat';
+    }
+
+
+    check_array_num() {
+
     }
 
     errorCallback(e) {
